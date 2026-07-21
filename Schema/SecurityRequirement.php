@@ -33,6 +33,6 @@ class SecurityRequirement
 
     public function __get($name): ?array
     {
-        return $this->data[$name];
+        return $this->data[$name] ?? null;
     }
 }

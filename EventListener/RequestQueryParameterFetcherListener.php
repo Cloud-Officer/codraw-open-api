@@ -58,8 +58,10 @@ class RequestQueryParameterFetcherListener implements EventSubscriberInterface
                         $value = $request->query->getBoolean($name);
                         break;
                     case 'number':
-                        /** @var @phpstan-ignore-next-line $value */
-                        $value = $request->query->get($name) + 0;
+                        $value = $request->query->get($name);
+                        if (is_numeric($value)) {
+                            $value += 0;
+                        }
                         break;
                     case 'array':
                         $separator = match ($queryParameter->collectionFormat) {

@@ -38,7 +38,7 @@ class QueryParameter extends Parameter
         ?int $multipleOf = null,
         array|Constraint $constraints = [],
     ) {
-        $this->constraints = $constraints;
+        $this->constraints = \is_array($constraints) ? $constraints : [$constraints];
         parent::__construct(
             $name,
             $description,

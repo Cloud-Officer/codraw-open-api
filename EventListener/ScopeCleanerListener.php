@@ -29,7 +29,7 @@ class ScopeCleanerListener implements EventSubscriberInterface
                     continue;
                 }
 
-                unset($path->{$method});
+                $path->{$method} = null;
             }
         }
 

@@ -6,6 +6,7 @@ use Draw\Component\OpenApi\Event\PreDumpRootSchemaEvent;
 use Draw\Component\OpenApi\Exception\ConstraintViolationListException;
 use Draw\Component\OpenApi\HttpFoundation\ErrorToHttpCodeConverter\ConfigurableErrorToHttpCodeConverter;
 use Draw\Component\OpenApi\HttpFoundation\ErrorToHttpCodeConverter\ErrorToHttpCodeConverterInterface;
+use Draw\Component\OpenApi\HttpFoundation\ErrorToHttpCodeConverter\HttpExceptionToHttpCodeConverter;
 use Draw\Component\OpenApi\Schema\Response;
 use Draw\Component\OpenApi\Schema\Schema;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
@@ -27,7 +28,12 @@ final class ResponseApiExceptionListener
         private bool $debug = false,
         private string $violationKey = 'errors',
     ) {
-        $this->errorToHttpCodeConverters ??= new ConfigurableErrorToHttpCodeConverter();
+        if (!$this->errorToHttpCodeConverters) {
+            $this->errorToHttpCodeConverters = [
+                new HttpExceptionToHttpCodeConverter(),
+                new ConfigurableErrorToHttpCodeConverter(),
+            ];
+        }
     }
 
     #[AsEventListener]

@@ -10,6 +10,10 @@ class JmsDoctrineObjectConstructionCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
+        if (!$container->hasDefinition('jms_serializer.doctrine_object_constructor')) {
+            return;
+        }
+
         if (null === $container->getDefinition('jms_serializer.doctrine_object_constructor')->getDecoratedService()) {
             return;
         }

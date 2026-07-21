@@ -52,7 +52,7 @@ class RequestBodyValueResolver implements ValueResolverInterface
 
     private function getBodyData(Request $request, RequestBody $attribute): string
     {
-        $contentType = $request->headers->get('Content-Type');
+        $contentType = (string) $request->headers->get('Content-Type');
         switch (true) {
             case str_starts_with($contentType, 'application/json'):
                 // This allows an empty body to be consider as '{}'
@@ -60,6 +60,10 @@ class RequestBodyValueResolver implements ValueResolverInterface
                     $requestData = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
                 } catch (\JsonException) {
                     $requestData = [];
+                }
+
+                if (!\is_array($requestData)) {
+                    throw new BadRequestHttpException('Request body must be a JSON object or array');
                 }
 
                 break;

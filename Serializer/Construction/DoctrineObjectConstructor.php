@@ -118,7 +118,7 @@ class DoctrineObjectConstructor implements ObjectConstructorInterface
                         $classMetadata->getAssociationTargetClass($name),
                         $data[$dataName],
                         $context,
-                        $path + [$name]
+                        [...$path, $name]
                     );
                 }
 

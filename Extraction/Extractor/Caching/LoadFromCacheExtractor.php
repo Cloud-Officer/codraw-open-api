@@ -38,7 +38,7 @@ class LoadFromCacheExtractor implements ExtractorInterface
             throw new ExtractionImpossibleException();
         }
 
-        $cacheKey = $extractionContext->getCacheKey();
+        $cacheKey = preg_replace('/[^a-zA-Z0-9_.@-]+/', '-', $extractionContext->getCacheKey());
 
         $path = $this->cacheDirectory.'/openApi-'.$cacheKey.'.php';
 

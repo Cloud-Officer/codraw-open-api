@@ -45,7 +45,14 @@ class InstallSandboxCommand extends Command
     {
         $output->write('Downloading Swagger UI...');
         $path = sys_get_temp_dir().'/swagger-ui-'.$tag.'.zip';
-        $this->filesystem->dumpFile($path, file_get_contents('https://github.com/swagger-api/swagger-ui/archive/'.$tag.'.zip'));
+        $url = 'https://github.com/swagger-api/swagger-ui/archive/'.$tag.'.zip';
+        $content = file_get_contents($url);
+
+        if (false === $content) {
+            throw new \RuntimeException(\sprintf('Cannot download Swagger UI zip from [%s].', $url));
+        }
+
+        $this->filesystem->dumpFile($path, $content);
 
         register_shutdown_function([$this->filesystem, 'remove'], [$path]);
 
@@ -71,6 +78,9 @@ class InstallSandboxCommand extends Command
             $zipFile = \sprintf('zip://%s#%s', $zipPath, $filename);
             // Remove the first directory (eg. "wysiwyg-editor-master") from the file path
             $explodedPath = explode('/', $filename, 2);
+            if (!isset($explodedPath[1]) || str_contains($filename, '..')) {
+                continue;
+            }
             $realFilePath = $explodedPath[1];
             if (!str_starts_with($realFilePath, 'dist/')) {
                 continue;
